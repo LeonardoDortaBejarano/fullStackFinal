@@ -3,11 +3,6 @@ package com.formacion.app.Auth;
 public class LoginRequest {
     private String username;
     private String password;
-    private String email;
-
-    
-
-
 
     public LoginRequest() {
     }
@@ -25,13 +20,7 @@ public class LoginRequest {
         this.password = password;
     }
 
-    public String getEmail() {
-        return email;
-    }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
 
     
 

@@ -21,6 +21,9 @@ public class Roadmap {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
+    private String description;
+
+
     private Date created_date;
 
     @OneToMany(mappedBy = "roadmap", cascade = CascadeType.ALL )
@@ -28,6 +31,15 @@ public class Roadmap {
 
     @ManyToOne
     private User user;
+
+    public Roadmap(){}
+    
+    public Roadmap(String name, String description, Date created_date, User user) {
+        this.name = name;
+        this.created_date = created_date;
+        this.user = user;
+        this.description = description;
+    }
 
 
     public User getUser() {
@@ -39,8 +51,6 @@ public class Roadmap {
         this.user = user;
     }
 
-
-    public Roadmap(){}
 
 
     public Integer getId() {
@@ -78,8 +88,15 @@ public class Roadmap {
         this.milestones = milestones;
     }
 
-    
+    public String getDescription() {
+        return description;
+    }
 
-    
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+
 
 }

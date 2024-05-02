@@ -29,7 +29,7 @@ public class AuthService {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
         Optional<User> user = this.userRepository.findByUsername(loginRequest.getUsername());
         if (user.isPresent()) {
-            return jwtService.generateToken(user.get());
+            return jwtService.generateToken(user.get(),user.get().getId());
         } else {
            return null;
         }
@@ -44,7 +44,7 @@ public class AuthService {
         user.setUsername(registerRequest.getUsername());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         this.userRepository.save(user);
-        return jwtService.generateToken(user);
+        return jwtService.generateToken(user,user.getId());
     }
 
 }

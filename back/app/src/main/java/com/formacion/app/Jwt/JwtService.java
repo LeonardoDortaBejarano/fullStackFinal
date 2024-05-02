@@ -19,11 +19,12 @@ import io.jsonwebtoken.security.Keys;
 public class JwtService {
     private static final String SECRET_KEY="MLKJH345087GDSAPUIH095479UDFS9YUV79635HGNCM8328790598B1286735";
 
-    public String generateToken(UserDetails user){
-        return this.generateToken(new HashMap<>(), user);
+    public String generateToken(UserDetails user, Integer userId){
+        return this.generateToken(new HashMap<>(), user, userId);
     }
 
-    private String generateToken(Map<String,Object> extraClaims, UserDetails user) {
+    private String generateToken(Map<String,Object> extraClaims, UserDetails user, Integer userId) {
+        extraClaims.put("id", userId);
     return Jwts
         .builder()
         .setClaims(extraClaims)
