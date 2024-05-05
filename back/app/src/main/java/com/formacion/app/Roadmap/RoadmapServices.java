@@ -6,9 +6,15 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.stereotype.Service;
 
+import com.formacion.app.Milestone.Milestone;
+import com.formacion.app.Milestone.MilestoneRepository;
+import com.formacion.app.Task.Task;
+import com.formacion.app.Task.TaskRepository;
 import com.formacion.app.User.User;
 import com.formacion.app.User.UserRepository;
 
@@ -18,6 +24,10 @@ public class RoadmapServices {
     private RoadmapRepository roadmapRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private MilestoneRepository milestoneRepository;
+    @Autowired
+    private TaskRepository taskRepository;
 
     public Optional<Roadmap> findRoadmap(Integer roadmapId){
         return this.roadmapRepository.findById(roadmapId);
@@ -62,6 +72,30 @@ public class RoadmapServices {
 
     public List<Roadmap> getRoadmapsByUserId(Integer id) {
         return this.roadmapRepository.findByUserId(id);
+    }
+
+    public ResponseEntity<Milestone> createMilestoneForRoamap(Integer id, Milestone milestone) {
+        Optional<Roadmap> roadmap = this.roadmapRepository.findById(id);
+        if (roadmap.isPresent()) {
+            Milestone newMilestone = new Milestone();
+            newMilestone.setName(milestone.getName());
+            newMilestone.setContent(milestone.getContent());
+            newMilestone.setRoadmap(roadmap.get());
+            this.milestoneRepository.save(newMilestone);
+            if (milestone.getTasks() != null && !milestone.getTasks().isEmpty()) {
+                List<Task> tasks = milestone.getTasks();
+                for (Task task : tasks) {
+                    Task taskToSave = new Task();
+                    taskToSave.setName(task.getName());
+                    taskToSave.setMilestone(newMilestone);
+                    taskRepository.save(taskToSave);
+                }
+            }
+            
+            return new ResponseEntity<Milestone>(newMilestone,HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
 

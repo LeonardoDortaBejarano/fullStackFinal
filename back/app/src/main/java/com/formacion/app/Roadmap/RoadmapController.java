@@ -3,6 +3,8 @@ package com.formacion.app.Roadmap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.formacion.app.Milestone.Milestone;
+
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +44,11 @@ public class RoadmapController {
     public ResponseEntity<Roadmap> createRoadmap(@RequestBody Roadmap roadmap) {
         Roadmap roadmapRespond = this.roadMapService.create(roadmap);
         return new ResponseEntity<Roadmap>(roadmapRespond,HttpStatus.OK); 
+    }
+
+    @PostMapping("/{id}/milestone")
+    public ResponseEntity<Milestone> createMilestoneForRoamap(@PathVariable("id") Integer id, @RequestBody Milestone milestone) {
+         return this.roadMapService.createMilestoneForRoamap(id,milestone);
     }
 
     @PutMapping("/{id}")
