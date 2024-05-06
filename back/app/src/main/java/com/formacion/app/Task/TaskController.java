@@ -44,8 +44,7 @@ public class TaskController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Task> modifyTask(@PathVariable("id") Integer id, @RequestBody Task task) {
-        HttpStatus httpStatus = this.taskServices.modify(id, task);
-        return new ResponseEntity<Task>(httpStatus);
+        return this.taskServices.modify(id, task);
     }
 
     @DeleteMapping("/{id}")

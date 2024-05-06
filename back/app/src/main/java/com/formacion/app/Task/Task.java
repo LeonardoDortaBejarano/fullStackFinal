@@ -2,6 +2,7 @@ package com.formacion.app.Task;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.formacion.app.Milestone.Milestone;
 import com.formacion.app.User.User;
 
@@ -23,6 +24,7 @@ public class Task {
     private String link;
 
     @ManyToOne
+    @JsonIgnore
     private Milestone milestone;
 
     public Task() {

@@ -98,6 +98,10 @@ public class RoadmapServices {
         }
     }
 
+    public List<Roadmap> searchRoadmapByQuery(String query) {
+        return this.roadmapRepository.findByNameContaining(query);
+    }
+
 
 
 

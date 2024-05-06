@@ -3,6 +3,7 @@ package com.formacion.app.Milestone;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.formacion.app.Roadmap.Roadmap;
 import com.formacion.app.Task.Task;
 
@@ -28,6 +29,7 @@ public class Milestone {
     private List<Task> tasks;
 
     @ManyToOne
+    @JsonIgnore
     private Roadmap roadmap;
 
     public Milestone(){}
