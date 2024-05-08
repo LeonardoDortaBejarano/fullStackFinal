@@ -8,6 +8,8 @@ import jakarta.websocket.server.PathParam;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 import com.formacion.app.Roadmap.RequestRoadmap;
 import com.formacion.app.Roadmap.Roadmap;
+import com.formacion.app.Roadmap.RoadmapDto;
 import com.formacion.app.Roadmap.RoadmapRepository;
 import com.formacion.app.Roadmap.RoadmapServices;
 import com.formacion.app.User.UserService;
@@ -55,9 +58,11 @@ public class UserController {
     }
 
     @GetMapping("{id}/roadmap")
-    public ResponseEntity<List<Roadmap>> getUserRoadmaps(@PathVariable("id") Integer id) {
+    public ResponseEntity<List<RoadmapDto>> getUserRoadmaps(@PathVariable("id") Integer id) {
+        
         List<Roadmap> roadmaps = this.roadmapServices.getRoadmapsByUserId(id);
-        return new ResponseEntity<List<Roadmap>>(roadmaps,HttpStatus.OK);
+        List<RoadmapDto> roadmapsDto =  roadmaps.stream().map(this.roadmapServices::convertToDto).collect(Collectors.toList());
+        return new ResponseEntity<List<RoadmapDto>>(roadmapsDto,HttpStatus.OK);
     }  
     
 

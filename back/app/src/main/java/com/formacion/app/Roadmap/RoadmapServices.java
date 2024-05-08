@@ -1,9 +1,11 @@
 package com.formacion.app.Roadmap;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -28,6 +30,8 @@ public class RoadmapServices {
     private MilestoneRepository milestoneRepository;
     @Autowired
     private TaskRepository taskRepository;
+    @Autowired
+    private ModelMapper modelMapper;
 
     public Optional<Roadmap> findRoadmap(Integer roadmapId){
         return this.roadmapRepository.findById(roadmapId);
@@ -76,11 +80,13 @@ public class RoadmapServices {
 
     public ResponseEntity<Milestone> createMilestoneForRoamap(Integer id, Milestone milestone) {
         Optional<Roadmap> roadmap = this.roadmapRepository.findById(id);
+        List<Task> createdTask = new ArrayList<>();
         if (roadmap.isPresent()) {
             Milestone newMilestone = new Milestone();
             newMilestone.setName(milestone.getName());
             newMilestone.setContent(milestone.getContent());
             newMilestone.setRoadmap(roadmap.get());
+            
             this.milestoneRepository.save(newMilestone);
             if (milestone.getTasks() != null && !milestone.getTasks().isEmpty()) {
                 List<Task> tasks = milestone.getTasks();
@@ -88,8 +94,9 @@ public class RoadmapServices {
                     Task taskToSave = new Task();
                     taskToSave.setName(task.getName());
                     taskToSave.setMilestone(newMilestone);
-                    taskRepository.save(taskToSave);
+                    createdTask.add(taskRepository.save(taskToSave));
                 }
+                newMilestone.setTasks(createdTask);
             }
             
             return new ResponseEntity<Milestone>(newMilestone,HttpStatus.OK);
@@ -100,6 +107,42 @@ public class RoadmapServices {
 
     public List<Roadmap> searchRoadmapByQuery(String query) {
         return this.roadmapRepository.findByNameContaining(query);
+    }
+
+    public Integer getTaskQuantity(Roadmap roadmap) {
+        Integer taskQuantity = 0;
+        for (Milestone milestone : roadmap.getMilestones()) {
+            taskQuantity += milestone.getTasks().size();
+        }
+        return taskQuantity;
+    }
+
+    public Integer getDoneTaskQuantity(Roadmap roadmap) {
+        Integer doneTaskQuantity = 0;
+        for (Milestone milestone : roadmap.getMilestones()) {
+            for (Task task : milestone.getTasks())
+            if (task.isComplete()) {
+                ++doneTaskQuantity;
+            }
+        }
+        return doneTaskQuantity;
+    }
+
+    public Float getDonePercentage(Roadmap roadmap) {
+        if (this.getTaskQuantity(roadmap)!=0) {
+            System.out.println(this.getDoneTaskQuantity(roadmap) / this.getTaskQuantity(roadmap) * 100);
+            return ((float)this.getDoneTaskQuantity(roadmap) / (float)this.getTaskQuantity(roadmap)) * 100;
+            
+        }
+        return (float)0;
+    }
+
+    public RoadmapDto convertToDto(Roadmap roadmap) {
+        RoadmapDto roadmapDto = modelMapper.map(roadmap, RoadmapDto.class);
+        roadmapDto.setTotalTask(this.getTaskQuantity(roadmap)); 
+        roadmapDto.setTotalDoneTask(this.getDoneTaskQuantity(roadmap));
+        roadmapDto.setDonePercentage(this.getDonePercentage(roadmap));
+        return roadmapDto;
     }
 
 

@@ -1,6 +1,6 @@
-package com.formacion.app.Config;
 
-import org.springframework.beans.factory.annotation.Autowired;
+
+/* import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -31,9 +31,7 @@ public class SecurityConfig {
                     authorizeHttpRequests
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
-                        .requestMatchers("/api-docs/**").permitAll()
-                        /* .requestMatchers("/**").permitAll() */
-                        
+                        .requestMatchers("/api-docs/**").permitAll()                        
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManager->
@@ -48,3 +46,4 @@ public class SecurityConfig {
     } 
 
 }
+ */

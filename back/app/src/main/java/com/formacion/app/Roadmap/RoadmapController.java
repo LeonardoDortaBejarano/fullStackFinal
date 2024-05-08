@@ -7,8 +7,9 @@ import com.formacion.app.Milestone.Milestone;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,9 +44,11 @@ public class RoadmapController {
     }
 
     @GetMapping("search")
-    public ResponseEntity<List<Roadmap>> getRoadmapsByQuery(@RequestParam String query) {
+    public ResponseEntity<List<RoadmapDto>> getRoadmapsByQuery(@RequestParam String query) {
         List<Roadmap> roadmap =  this.roadMapService.searchRoadmapByQuery(query);
-        return new ResponseEntity<List<Roadmap>>(roadmap,HttpStatus.OK);
+        List<RoadmapDto> roadmapsDto = roadmap.stream().map(roadMapService::convertToDto).collect(Collectors.toList());
+        System.out.println(new ResponseEntity<List<RoadmapDto>>(roadmapsDto,HttpStatus.OK));
+        return new ResponseEntity<List<RoadmapDto>>(roadmapsDto,HttpStatus.OK);
     }
     
 
@@ -71,5 +74,7 @@ public class RoadmapController {
         this.roadMapService.deleteRoadmap(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+
 
 }
