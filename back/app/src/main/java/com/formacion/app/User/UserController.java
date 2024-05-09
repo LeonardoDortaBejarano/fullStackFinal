@@ -73,7 +73,7 @@ public class UserController {
     }
 
     @PostMapping("{id}/roadmap")
-    public ResponseEntity<Roadmap> createRoadmapForUser(@PathVariable("id") Integer id, @RequestBody RequestRoadmap requestRoadmap ) {
+    public ResponseEntity<RoadmapDto> createRoadmapForUser(@PathVariable("id") Integer id, @RequestBody RequestRoadmap requestRoadmap ) {
         return this.roadmapServices.createRoadmapForUser(id,requestRoadmap);
     }
 

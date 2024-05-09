@@ -3,8 +3,17 @@ package com.formacion.app.Roadmap;
 public class RequestRoadmap {
     private String name;
     private String description;
+    private String color;
 
     
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
 
     public RequestRoadmap() {
     }

@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.formacion.app.Milestone.Milestone;
 import com.formacion.app.Milestone.MilestoneRepository;
@@ -63,12 +65,13 @@ public class RoadmapServices {
          this.roadmapRepository.deleteById(id);
     }
 
-    public ResponseEntity<Roadmap> createRoadmapForUser(Integer id, RequestRoadmap requestRoadmap) {
+    public ResponseEntity<RoadmapDto> createRoadmapForUser(Integer id, RequestRoadmap requestRoadmap) {
         Optional<User> user = this.userRepository.findById(id);
         if (user.isPresent()) {
             Roadmap roadmap = new Roadmap(requestRoadmap.getName(),requestRoadmap.getDescription(),new Date(), user.get());
-            this.roadmapRepository.save(roadmap);
-            return new ResponseEntity<Roadmap>(roadmap,HttpStatus.OK);
+            roadmap.setColor(requestRoadmap.getColor());
+            RoadmapDto roadmapDto = this.convertToDto(this.roadmapRepository.save(roadmap));
+            return new ResponseEntity<RoadmapDto>(roadmapDto,HttpStatus.OK);
         }   else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }  
@@ -110,6 +113,10 @@ public class RoadmapServices {
     }
 
     public Integer getTaskQuantity(Roadmap roadmap) {
+        if (roadmap.getMilestones() == null) {
+            return 0;
+        }
+        
         Integer taskQuantity = 0;
         for (Milestone milestone : roadmap.getMilestones()) {
             taskQuantity += milestone.getTasks().size();
@@ -118,6 +125,10 @@ public class RoadmapServices {
     }
 
     public Integer getDoneTaskQuantity(Roadmap roadmap) {
+        if (roadmap.getMilestones() == null) {
+            return 0;
+        }
+
         Integer doneTaskQuantity = 0;
         for (Milestone milestone : roadmap.getMilestones()) {
             for (Task task : milestone.getTasks())
@@ -144,6 +155,25 @@ public class RoadmapServices {
         roadmapDto.setDonePercentage(this.getDonePercentage(roadmap));
         return roadmapDto;
     }
+
+    public ResponseEntity<RoadmapDto> updateRoadmapProperties(Integer id, RequestRoadmap roadmapProperties) {
+        Optional<Roadmap> roadmap = this.roadmapRepository.findById(id);
+        if (roadmap.isPresent()) {
+            roadmap.get().setName(roadmapProperties.getName());
+            roadmap.get().setDescription(roadmapProperties.getDescription());
+            roadmap.get().setColor(roadmapProperties.getColor());
+            RoadmapDto roadmapDto = this.convertToDto(this.roadmapRepository.save(roadmap.get()));
+            return new ResponseEntity<RoadmapDto>(roadmapDto,HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }  
+    }
+
+    
+
+    
+
+
 
 
 

@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -53,9 +54,10 @@ public class RoadmapController {
     
 
     @PostMapping()
-    public ResponseEntity<Roadmap> createRoadmap(@RequestBody Roadmap roadmap) {
+    public ResponseEntity<RoadmapDto> createRoadmap(@RequestBody Roadmap roadmap) {
         Roadmap roadmapRespond = this.roadMapService.create(roadmap);
-        return new ResponseEntity<Roadmap>(roadmapRespond,HttpStatus.OK); 
+        RoadmapDto roadmapDto  = roadMapService.convertToDto(roadmapRespond); 
+        return new ResponseEntity<RoadmapDto>(roadmapDto,HttpStatus.OK); 
     }
 
     @PostMapping("/{id}/milestone")
@@ -68,6 +70,22 @@ public class RoadmapController {
         HttpStatus httpStatus = this.roadMapService.modify(id, roadmap);
         return new ResponseEntity<Roadmap>(httpStatus);
     }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<RoadmapDto> updateRoadmapProperties(@PathVariable("id") Integer id, @RequestBody RequestRoadmap roadmapProperties) {
+        return this.roadMapService.updateRoadmapProperties(id, roadmapProperties);
+    }
+
+
+/*     @PatchMapping("/{id}")
+    public Roadmap updateRoadmapProperties(@PathVariable Long id, @RequestBody RoadmapUpdateRequest request) {
+        // Logic to update the roadmap properties
+        Roadmap roadmap = roadmapService.findById(id);
+        roadmap.setDonePercentage(request.getDonePercentage());
+        roadmap.setCreatedDate(request.getCreatedDate());
+        roadmap.setName(request.getName());
+        return roadmapService.save(roadmap);
+    } */
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Roadmap> deleteRoadmap(@PathVariable("id") Integer id) {

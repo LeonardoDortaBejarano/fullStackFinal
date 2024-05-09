@@ -23,6 +23,7 @@ public class Roadmap {
     private Integer id;
     private String name;
     private String description;
+    private String color = "#0e2c5e";
 
 
     private Date created_date;
@@ -97,6 +98,14 @@ public class Roadmap {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 
 

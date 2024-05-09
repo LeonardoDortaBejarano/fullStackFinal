@@ -22,6 +22,7 @@ public class RoadmapDto {
     private Integer totalTask;
     private Integer totalDoneTask;
     private Float donePercentage;
+    private String color;
 
     public Integer getId() {
         return id;
@@ -76,6 +77,12 @@ public class RoadmapDto {
     }
     public void setDonePercentage(Float donePercentage) {
         this.donePercentage = donePercentage;
+    }
+    public String getColor() {
+        return color;
+    }
+    public void setColor(String color) {
+        this.color = color;
     }
 
 
