@@ -1,5 +1,6 @@
 package com.formacion.app.Milestone;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.formacion.app.Milestone.Milestone;
+import com.formacion.app.Order.OrderPairRequest;
 
 @RestController
 @RequestMapping("milestone")
@@ -44,9 +46,14 @@ public class MilestoneController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Milestone> modifyMilestone(@PathVariable("id") Integer id, @RequestBody Milestone milestone) {
-        HttpStatus httpStatus = this.milestoneServices.modify(id, milestone);
-        return new ResponseEntity<Milestone>(httpStatus);
+    public ResponseEntity<Milestone> modifyMilestone(@PathVariable("id") Integer id, @RequestBody RequestMilestoneEdition milestone) {
+        return this.milestoneServices.modify(id, milestone);
+        
+    }
+
+    @PutMapping("order")
+    public ResponseEntity<String> modifyMilestoneOrder( @RequestBody List<OrderPairRequest> orderPairsRequest) {
+        return this.milestoneServices.sortMilestones(orderPairsRequest);
     }
 
     @DeleteMapping("/{id}")

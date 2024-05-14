@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Repository
 public interface RoadmapRepository extends JpaRepository<Roadmap,Integer>{
-    List<Roadmap> findByUserId(Integer userId);
+    /* List<Roadmap> findByUserId(Integer userId); */
     List<Roadmap> findByNameContaining(String query);
-
+    List<Roadmap> findByUserIdOrderByOrderValue(Integer id);
     
 } 

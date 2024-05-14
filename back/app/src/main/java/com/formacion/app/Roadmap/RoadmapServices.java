@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.formacion.app.Milestone.Milestone;
 import com.formacion.app.Milestone.MilestoneRepository;
+import com.formacion.app.Order.OrderPairRequest;
 import com.formacion.app.Task.Task;
 import com.formacion.app.Task.TaskRepository;
 import com.formacion.app.User.User;
@@ -70,6 +71,7 @@ public class RoadmapServices {
         if (user.isPresent()) {
             Roadmap roadmap = new Roadmap(requestRoadmap.getName(),requestRoadmap.getDescription(),new Date(), user.get());
             roadmap.setColor(requestRoadmap.getColor());
+            roadmap.setOrderValue(this.getRoadmapsByUserId(id).size());
             RoadmapDto roadmapDto = this.convertToDto(this.roadmapRepository.save(roadmap));
             return new ResponseEntity<RoadmapDto>(roadmapDto,HttpStatus.OK);
         }   else {
@@ -78,7 +80,7 @@ public class RoadmapServices {
     }
 
     public List<Roadmap> getRoadmapsByUserId(Integer id) {
-        return this.roadmapRepository.findByUserId(id);
+        return this.roadmapRepository.findByUserIdOrderByOrderValue(id);
     }
 
     public ResponseEntity<Milestone> createMilestoneForRoamap(Integer id, Milestone milestone) {
@@ -88,6 +90,7 @@ public class RoadmapServices {
             Milestone newMilestone = new Milestone();
             newMilestone.setName(milestone.getName());
             newMilestone.setContent(milestone.getContent());
+            newMilestone.setOrderValue(milestone.getOrderValue());
             newMilestone.setRoadmap(roadmap.get());
             
             this.milestoneRepository.save(newMilestone);
@@ -141,7 +144,6 @@ public class RoadmapServices {
 
     public Float getDonePercentage(Roadmap roadmap) {
         if (this.getTaskQuantity(roadmap)!=0) {
-            System.out.println(this.getDoneTaskQuantity(roadmap) / this.getTaskQuantity(roadmap) * 100);
             return ((float)this.getDoneTaskQuantity(roadmap) / (float)this.getTaskQuantity(roadmap)) * 100;
             
         }
@@ -167,6 +169,21 @@ public class RoadmapServices {
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }  
+    }
+
+    public ResponseEntity<String> sortRoadmaps(List<OrderPairRequest>orderPairsRequest) {
+
+        for (OrderPairRequest orderPairRequest : orderPairsRequest) {
+            Optional<Roadmap> roadmap = this.roadmapRepository.findById(orderPairRequest.getId());
+            if (roadmap.isPresent()) {
+                roadmap.get().setOrderValue(orderPairRequest.getOrderValue());
+                this.roadmapRepository.save(roadmap.get());
+            } else {
+                return new ResponseEntity<String>(String.format("the roadmap with the id %s was no found", orderPairRequest.getOrderValue()),HttpStatus.NOT_FOUND);
+            }
+           
+        }
+        return new ResponseEntity<String>("Roadmaps Ordenados con exito",HttpStatus.OK);
     }
 
     

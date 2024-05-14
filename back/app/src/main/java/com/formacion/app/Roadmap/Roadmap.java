@@ -24,7 +24,16 @@ public class Roadmap {
     private String name;
     private String description;
     private String color = "#0e2c5e";
+    private Integer orderValue;
 
+
+    public Integer getOrderValue() {
+        return orderValue;
+    }
+
+    public void setOrderValue(Integer orderValue) {
+        this.orderValue = orderValue;
+    }
 
     private Date created_date;
 

@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.formacion.app.Milestone.Milestone;
+import com.formacion.app.Order.OrderPairRequest;
 
 import java.util.List;
 import java.util.Optional;
@@ -48,7 +49,6 @@ public class RoadmapController {
     public ResponseEntity<List<RoadmapDto>> getRoadmapsByQuery(@RequestParam String query) {
         List<Roadmap> roadmap =  this.roadMapService.searchRoadmapByQuery(query);
         List<RoadmapDto> roadmapsDto = roadmap.stream().map(roadMapService::convertToDto).collect(Collectors.toList());
-        System.out.println(new ResponseEntity<List<RoadmapDto>>(roadmapsDto,HttpStatus.OK));
         return new ResponseEntity<List<RoadmapDto>>(roadmapsDto,HttpStatus.OK);
     }
     
@@ -69,6 +69,11 @@ public class RoadmapController {
     public ResponseEntity<Roadmap> modifyRoadmap(@PathVariable("id") Integer id, @RequestBody Roadmap roadmap) {
         HttpStatus httpStatus = this.roadMapService.modify(id, roadmap);
         return new ResponseEntity<Roadmap>(httpStatus);
+    }
+
+    @PutMapping("order")
+    public ResponseEntity<String> modifyUsersRoadmpaOrder( @RequestBody List<OrderPairRequest> orderPairsRequest) {
+        return this.roadMapService.sortRoadmaps(orderPairsRequest);
     }
 
     @PatchMapping("/{id}")

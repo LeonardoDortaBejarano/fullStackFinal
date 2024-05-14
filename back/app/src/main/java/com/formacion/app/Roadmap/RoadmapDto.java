@@ -23,7 +23,14 @@ public class RoadmapDto {
     private Integer totalDoneTask;
     private Float donePercentage;
     private String color;
+    private Integer order;
 
+    public Integer getOrder() {
+        return order;
+    }
+    public void setOrder(Integer order) {
+        this.order = order;
+    }
     public Integer getId() {
         return id;
     }
