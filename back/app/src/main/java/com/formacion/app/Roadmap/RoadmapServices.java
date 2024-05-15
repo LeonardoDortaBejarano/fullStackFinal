@@ -99,6 +99,7 @@ public class RoadmapServices {
                 for (Task task : tasks) {
                     Task taskToSave = new Task();
                     taskToSave.setName(task.getName());
+                    taskToSave.setOrderValue(task.getOrderValue());
                     taskToSave.setMilestone(newMilestone);
                     createdTask.add(taskRepository.save(taskToSave));
                 }
